@@ -64,7 +64,7 @@ class ButtonAppBar extends Component {
 
   render() {
     const { classes, title, actions, authed } = this.props;
-    console.log('actions', actions);
+
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -91,6 +91,7 @@ class ButtonAppBar extends Component {
             >
               <MenuIcon />
             </IconButton>
+            <img src={require('../../assets/logo.png')} />
             <Typography type="title" color="inherit" className={classes.flex}>
               {title}
             </Typography>

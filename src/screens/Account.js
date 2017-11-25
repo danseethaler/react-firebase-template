@@ -8,6 +8,7 @@ import Slide from 'material-ui/transitions/Slide';
 import { connect } from 'react-redux';
 
 import { auth } from '../config/firebase';
+import styles from '../services/styles';
 
 class AccountForm extends Component {
   constructor(props) {
@@ -146,17 +147,6 @@ const mapDispatchToProps = dispatch => {
     },
   };
 };
-
-const styles = theme => ({
-  container: {
-    margin: 20,
-  },
-  textField: {
-    // marginLeft: theme.spacing.unit,
-    // marginRight: theme.spacing.unit,
-    width: '100%',
-  },
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles)(Account)

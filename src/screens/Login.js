@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { login, resetPassword } from '../helpers/auth';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import Snackbar from 'material-ui/Snackbar';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
+
+import { login, resetPassword } from '../helpers/auth';
+import styles from '../services/styles';
 
 function setErrorMsg(error) {
   return {
@@ -117,14 +119,5 @@ class Login extends Component {
     );
   }
 }
-
-const styles = theme => ({
-  container: {
-    margin: 20,
-  },
-  textField: {
-    width: '100%',
-  },
-});
 
 export default withRouter(withStyles(styles)(Login));

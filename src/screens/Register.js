@@ -5,7 +5,9 @@ import Typography from 'material-ui/Typography';
 import Snackbar from 'material-ui/Snackbar';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
+
 import { authorize } from '../helpers/auth';
+import styles from '../services/styles';
 
 function setErrorMsg(error) {
   return {
@@ -111,14 +113,5 @@ class Register extends Component {
     );
   }
 }
-
-const styles = theme => ({
-  container: {
-    margin: 20,
-  },
-  textField: {
-    width: '100%',
-  },
-});
 
 export default withRouter(withStyles(styles)(Register));

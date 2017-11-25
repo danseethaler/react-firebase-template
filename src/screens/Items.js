@@ -9,13 +9,7 @@ import List, {
 import Checkbox from 'material-ui/Checkbox';
 import Avatar from 'material-ui/Avatar';
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 580,
-    background: theme.palette.background.paper,
-  },
-});
+import styles from '../services/styles';
 
 class CheckboxListSecondary extends React.Component {
   state = {
