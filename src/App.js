@@ -1,19 +1,41 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 import './App.css';
+import Welcome from './screens/Welcome';
+import Login from './screens/Login';
+import Logout from './screens/Logout';
+import Account from './screens/Account';
+import Register from './screens/Register';
+import Items from './screens/Items';
+import Palette from './components/Palette';
+import AppBar from './components/AppBar';
+import UserTracker from './components/UserTracker';
+import templateApp from './reducers';
+
+const store = createStore(templateApp);
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Provider store={store}>
+        <Router>
+          <Palette>
+            <UserTracker />
+            <AppBar />
+            <Route exact path="/" component={Welcome} />
+            {/* <Route exact path="/add" component={Add} />
+          <Route exact path="/settings" component={Settings} /> */}
+            <Route path="/items" component={Items} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/account" component={Account} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/logout" component={Logout} />
+          </Palette>
+        </Router>
+      </Provider>
     );
   }
 }
