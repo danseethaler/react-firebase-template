@@ -5,6 +5,9 @@ export default (state = [], action) => {
       currentItems.push(action.item);
       return currentItems;
 
+    case 'CLEAR_ITEMS':
+      return [];
+
     default:
       return state;
   }

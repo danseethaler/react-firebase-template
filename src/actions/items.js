@@ -4,3 +4,9 @@ export const addNewItem = item => {
     item,
   };
 };
+
+export const clearItems = () => {
+  return {
+    type: 'CLEAR_ITEMS',
+  };
+};

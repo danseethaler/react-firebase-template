@@ -12,7 +12,7 @@ import Register from './screens/Register';
 import Items from './screens/Items';
 import Palette from './components/Palette';
 import AppBar from './components/AppBar';
-import UserTracker from './components/UserTracker';
+import StateTracker from './components/StateTracker';
 import templateApp from './reducers';
 
 const store = createStore(templateApp);
@@ -23,7 +23,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <Palette>
-            <UserTracker />
+            <StateTracker />
             <AppBar />
             <Route exact path="/" component={Welcome} />
             {/* <Route exact path="/add" component={Add} />
