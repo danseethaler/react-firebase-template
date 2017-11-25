@@ -92,6 +92,7 @@ class ButtonAppBar extends Component {
               <MenuIcon />
             </IconButton>
             <img
+              alt={title}
               src={require('../../assets/pf_logo.png')}
               style={{ width: 100 }}
             />

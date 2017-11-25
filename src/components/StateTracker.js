@@ -38,7 +38,7 @@ class StateTracker extends Component {
       } else {
         // User is logged in
         this.itemsRef.on('child_added', this.addItem);
-        // addSeedData();
+        addSeedData();
         this.itemsRef.on('child_changed', this.updateItem);
 
         this.itemsRef.on('child_removed', data => {

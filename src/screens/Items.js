@@ -4,16 +4,26 @@ import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router-dom';
 import List, {
   ListItem,
-  ListItemSecondaryAction,
+  // ListItemSecondaryAction,
   ListItemText,
 } from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
+import { Link } from 'react-router-dom';
+import AddIcon from 'material-ui-icons/Add';
+import Button from 'material-ui/Button';
+// import Checkbox from 'material-ui/Checkbox';
 import Avatar from 'material-ui/Avatar';
 import { connect } from 'react-redux';
 
 import styles from '../services/styles';
 
 class ItemsList extends Component {
+  getAvatar = ({ displayName, imageURL }) => {
+    if (imageURL) {
+      return <Avatar alt={displayName} src={imageURL} />;
+    }
+    return <Avatar>{displayName[0]}</Avatar>;
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -27,10 +37,10 @@ class ItemsList extends Component {
               button
               className={classes.listItem}
               onClick={() => {
-                this.props.history.push('/edit/' + id);
+                this.props.history.push('/items/edit/' + id);
               }}
             >
-              <Avatar alt={displayName} src={imageURL} />
+              {this.getAvatar({ displayName, imageURL })}
               <ListItemText primary={displayName} />
               {/* <ListItemSecondaryAction>
                     <Checkbox
@@ -41,6 +51,16 @@ class ItemsList extends Component {
             </ListItem>
           ))}
         </List>
+        <Link to="/items/add">
+          <Button
+            fab
+            color="primary"
+            aria-label="add"
+            style={{ position: 'fixed', bottom: 10, right: 10 }}
+          >
+            <AddIcon />
+          </Button>
+        </Link>
       </div>
     );
   }

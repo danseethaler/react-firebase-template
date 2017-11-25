@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import Snackbar from 'material-ui/Snackbar';
-import Slide from 'material-ui/transitions/Slide';
+// import Slide from 'material-ui/transitions/Slide';
 import { connect } from 'react-redux';
 
 import { auth } from '../config/firebase';
@@ -76,12 +76,12 @@ class AccountForm extends Component {
   };
 
   render() {
-    const { user: { email, displayName }, classes } = this.props;
+    const { user: { displayName }, classes } = this.props;
 
     return (
       <div className={classes.container}>
         <Typography type="display1" gutterBottom>
-          {email}
+          {displayName}
         </Typography>
         <form onSubmit={this.save}>
           <div>
@@ -136,7 +136,6 @@ class Account extends Component {
 }
 
 const mapStateToProps = ({ user }) => {
-  console.log('user', user);
   return { user };
 };
 

@@ -11,6 +11,8 @@ import Account from './screens/Account';
 import Register from './screens/Register';
 import Items from './screens/Items';
 import Edit from './screens/Edit';
+import Add from './screens/Add';
+import Settings from './screens/Settings';
 import Palette from './components/Palette';
 import AppBar from './components/AppBar';
 import StateTracker from './components/StateTracker';
@@ -27,12 +29,14 @@ class App extends Component {
             <StateTracker />
             <AppBar />
             <Route exact path="/" component={Welcome} />
-            {/* <Route exact path="/add" component={Add} />
-          <Route exact path="/settings" component={Settings} /> */}
-            <Route path="/items" component={Items} />
+            <Route exact path="/settings" component={Settings} />
+
+            <Route exact path="/items" component={Items} />
+            <Route exact path="/items/add" component={Add} />
+            <Route exact path="/items/edit/:id" component={Edit} />
+
             <Route exact path="/register" component={Register} />
             <Route exact path="/account" component={Account} />
-            <Route exact path="/edit/:id" component={Edit} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/logout" component={Logout} />
           </Palette>
