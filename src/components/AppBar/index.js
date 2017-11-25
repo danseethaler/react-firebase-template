@@ -91,7 +91,10 @@ class ButtonAppBar extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <img src={require('../../assets/logo.png')} />
+            <img
+              src={require('../../assets/pf_logo.png')}
+              style={{ width: 100 }}
+            />
             <Typography type="title" color="inherit" className={classes.flex}>
               {title}
             </Typography>
