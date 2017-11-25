@@ -3,7 +3,12 @@ import { connect } from 'react-redux';
 
 import firebase, { auth } from '../config/firebase';
 import { onAuthStateChanged } from '../actions/user';
-import { addNewItem, clearItems } from '../actions/items';
+import {
+  addNewItem,
+  clearItems,
+  updateItem,
+  removeItem,
+} from '../actions/items';
 
 function addSeedData() {
   fetch('https://randomuser.me/api/')
@@ -34,6 +39,11 @@ class StateTracker extends Component {
         // User is logged in
         this.itemsRef.on('child_added', this.addItem);
         // addSeedData();
+        this.itemsRef.on('child_changed', this.updateItem);
+
+        this.itemsRef.on('child_removed', data => {
+          this.props.removeItem(data.key);
+        });
       }
       onAuthStateChanged(status);
     });
@@ -58,6 +68,10 @@ class StateTracker extends Component {
   render() {
     return null;
   }
+
+  updateItem = data => {
+    this.props.updateItem({ id: data.key, ...data.val() });
+  };
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -66,6 +80,12 @@ const mapDispatchToProps = dispatch => ({
   },
   addNewItem: itemDetail => {
     dispatch(addNewItem(itemDetail));
+  },
+  updateItem: itemDetail => {
+    dispatch(updateItem(itemDetail));
+  },
+  removeItem: key => {
+    dispatch(removeItem(key));
   },
   clearItems: () => {
     dispatch(clearItems());

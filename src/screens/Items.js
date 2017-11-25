@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import { withRouter } from 'react-router-dom';
 import List, {
   ListItem,
   ListItemSecondaryAction,
@@ -19,12 +20,15 @@ class ItemsList extends Component {
     return (
       <div className={classes.root}>
         <List>
-          {this.props.items.map(({ displayName, imageURL }) => (
+          {this.props.items.map(({ id, displayName, imageURL }) => (
             <ListItem
-              key={displayName}
+              key={id}
               dense
               button
               className={classes.listItem}
+              onClick={() => {
+                this.props.history.push('/edit/' + id);
+              }}
             >
               <Avatar alt={displayName} src={imageURL} />
               <ListItemText primary={displayName} />
@@ -50,4 +54,4 @@ Items.propTypes = {
 
 export default connect(({ items }) => ({
   items,
-}))(withStyles(styles)(Items));
+}))(withRouter(withStyles(styles)(Items)));

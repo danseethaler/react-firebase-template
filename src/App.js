@@ -10,6 +10,7 @@ import Logout from './screens/Logout';
 import Account from './screens/Account';
 import Register from './screens/Register';
 import Items from './screens/Items';
+import Edit from './screens/Edit';
 import Palette from './components/Palette';
 import AppBar from './components/AppBar';
 import StateTracker from './components/StateTracker';
@@ -31,6 +32,7 @@ class App extends Component {
             <Route path="/items" component={Items} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/account" component={Account} />
+            <Route exact path="/edit/:id" component={Edit} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/logout" component={Logout} />
           </Palette>
