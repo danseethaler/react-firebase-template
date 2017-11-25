@@ -11,19 +11,12 @@ import { Link } from 'react-router-dom';
 import AddIcon from 'material-ui-icons/Add';
 import Button from 'material-ui/Button';
 // import Checkbox from 'material-ui/Checkbox';
-import Avatar from 'material-ui/Avatar';
 import { connect } from 'react-redux';
 
 import styles from '../services/styles';
+import Avatar from '../components/Avatar';
 
 class ItemsList extends Component {
-  getAvatar = ({ displayName, imageURL }) => {
-    if (imageURL) {
-      return <Avatar alt={displayName} src={imageURL} />;
-    }
-    return <Avatar>{displayName[0]}</Avatar>;
-  };
-
   render() {
     const { classes } = this.props;
 
@@ -40,7 +33,8 @@ class ItemsList extends Component {
                 this.props.history.push('/items/edit/' + id);
               }}
             >
-              {this.getAvatar({ displayName, imageURL })}
+              <Avatar text={displayName} imageURL={imageURL} />
+
               <ListItemText primary={displayName} />
               {/* <ListItemSecondaryAction>
                     <Checkbox

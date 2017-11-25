@@ -15,14 +15,13 @@ function addSeedData() {
     .then(data => data.json())
     .then(data => {
       const user = data.results.shift();
-      // console.log('user', user);
 
       firebase
         .database()
         .ref('items')
         .push({
           displayName: user.name.first + ' ' + user.name.last,
-          imageURL: user.picture.medium,
+          imageURL: user.picture.large,
         });
     });
 }

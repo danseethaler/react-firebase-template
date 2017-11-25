@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
-import Avatar from 'material-ui/Avatar';
 
 import firebase from '../config/firebase';
 import Actions from '../components/Actions';
 import styles from '../services/styles';
+import Avatar from '../components/Avatar';
 
 class EditForm extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class EditForm extends Component {
           {displayName}
         </Typography>
 
-        <Avatar alt={displayName} src={imageURL} />
+        <Avatar text={displayName} imageURL={imageURL} big />
 
         <form onSubmit={this.updateItem}>
           <div>
