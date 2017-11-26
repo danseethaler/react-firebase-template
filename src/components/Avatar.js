@@ -7,10 +7,12 @@ const styles = theme => ({
   big: {
     width: 100,
     height: 100,
+    margin: 20,
   },
   normal: {
     width: 40,
     height: 40,
+    margin: 2,
   },
 });
 

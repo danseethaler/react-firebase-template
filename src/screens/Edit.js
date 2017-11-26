@@ -26,6 +26,8 @@ class EditForm extends Component {
   };
 
   updateItem = e => {
+    e.preventDefault();
+
     this.props.fbRef.set({
       displayName: this.state.displayName,
       imageURL: this.state.imageURL,
@@ -33,7 +35,13 @@ class EditForm extends Component {
   };
 
   manualUpdate = updates => {
-    this.props.fbRef.set(updates);
+    this.props.fbRef.set({
+      ...{
+        displayName: this.state.displayName,
+        imageURL: this.state.imageURL,
+      },
+      ...updates,
+    });
     this.setState({ ...this.state, ...updates });
   };
 
