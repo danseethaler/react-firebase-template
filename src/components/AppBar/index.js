@@ -36,32 +36,6 @@ class ButtonAppBar extends Component {
     });
   };
 
-  getButton = authed => {
-    const { history } = this.props;
-    if (authed) {
-      return (
-        <Button
-          color="contrast"
-          onClick={() => {
-            history.push('/logout');
-          }}
-        >
-          Logout
-        </Button>
-      );
-    }
-    return (
-      <Button
-        color="contrast"
-        onClick={() => {
-          history.push('/login');
-        }}
-      >
-        Login
-      </Button>
-    );
-  };
-
   render() {
     const { classes, title, actions, authed } = this.props;
 
@@ -91,15 +65,9 @@ class ButtonAppBar extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <img
-              alt={title}
-              src={require('../../assets/pf_logo.png')}
-              style={{ width: 100 }}
-            />
             <Typography type="title" color="inherit" className={classes.flex}>
               {title}
             </Typography>
-            {this.getButton(authed)}
           </Toolbar>
         </AppBar>
       </div>

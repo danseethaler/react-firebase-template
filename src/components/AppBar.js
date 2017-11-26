@@ -51,7 +51,7 @@ const getActions = authed =>
   });
 
 const AppBarExport = ({ authed }) => (
-  <AppBar authed={authed} actions={getActions(authed)} />
+  <AppBar authed={authed} title="Pocket Finance" actions={getActions(authed)} />
 );
 
 const mapStateToProps = ({ user: { email: authed } }) => ({ authed });

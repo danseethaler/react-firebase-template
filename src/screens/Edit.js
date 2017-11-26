@@ -7,6 +7,7 @@ import firebase from '../config/firebase';
 import Actions from '../components/Actions';
 import styles from '../services/styles';
 import Avatar from '../components/Avatar';
+import { storageRef } from '../config/firebase';
 
 class EditForm extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class EditForm extends Component {
     this.state = {
       displayName: props.item.displayName || '',
       imageURL: props.item.imageURL || '',
+      error: null,
     };
   }
 
@@ -24,16 +26,63 @@ class EditForm extends Component {
   };
 
   updateItem = e => {
-    e.preventDefault();
     this.props.fbRef.set({
       displayName: this.state.displayName,
       imageURL: this.state.imageURL,
     });
   };
 
+  manualUpdate = updates => {
+    this.props.fbRef.set(updates);
+    this.setState({ ...this.state, ...updates });
+  };
+
   deleteItem = () => {
     this.props.fbRef.remove();
     this.props.history.push('/items');
+  };
+
+  validFile = file => {
+    const extIndex = file.name.lastIndexOf('.') + 1;
+
+    if (!extIndex) {
+      return false;
+    }
+
+    var ext = file.name.substr(extIndex).toLowerCase();
+    return ['png', 'jpeg', 'jpg'].includes(ext);
+  };
+
+  getUserIconName = ({ name }) => {
+    const fileName = `${this.props.id}_${name.trim().toLowerCase()}`;
+    return fileName;
+  };
+
+  handleFiles = e => {
+    const { files } = e.target;
+    const file = files[0];
+
+    if (!this.validFile(file)) {
+      return this.setState({
+        error: 'Invalid file type.',
+      });
+    }
+
+    const fileName = this.getUserIconName(file);
+    var imagesRef = storageRef.child(`images/${fileName}`);
+
+    imagesRef
+      .put(file)
+      .then(({ downloadURL: imageURL }) => {
+        this.manualUpdate({
+          imageURL,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          error: 'Invalid file type.',
+        });
+      });
   };
 
   render() {
@@ -47,6 +96,8 @@ class EditForm extends Component {
         </Typography>
 
         <Avatar text={displayName} imageURL={imageURL} big />
+
+        <input type="file" id="input" onChange={this.handleFiles} />
 
         <form onSubmit={this.updateItem}>
           <div>
@@ -107,7 +158,12 @@ class Edit extends Component {
   render() {
     if (this.state.item) {
       return (
-        <EditForm {...this.props} item={this.state.item} fbRef={this.fbRef} />
+        <EditForm
+          {...this.props}
+          id={this.props.match.params.id}
+          item={this.state.item}
+          fbRef={this.fbRef}
+        />
       );
     }
     return null;
