@@ -8,6 +8,7 @@ import Actions from '../components/Actions';
 import { getItemBaseName } from '../helpers';
 import styles from '../services/styles';
 import AvatarPicker from '../components/AvatarPicker';
+import SnackWrap from '../components/SnackWrap';
 
 class Edit extends Component {
   constructor(props) {
@@ -77,6 +78,14 @@ class EditForm extends Edit {
       displayName: this.state.displayName.trim(),
       imageURL: this.state.imageURL.trim(),
     });
+
+    this.setState({
+      snackMsg: 'Details updated.',
+    });
+
+    setTimeout(() => {
+      this.setState({ snackMsg: null });
+    }, 3000);
   };
 
   manualUpdate = updates => {
@@ -84,7 +93,16 @@ class EditForm extends Edit {
       ...this.state,
       ...updates,
     });
-    this.setState({ ...this.state, ...updates });
+    this.setState({
+      ...this.state,
+      ...updates,
+      ...{
+        snackMsg: 'Image updated.',
+      },
+    });
+    setTimeout(() => {
+      this.setState({ snackMsg: null });
+    }, 3000);
   };
 
   deleteItem = () => {
@@ -109,9 +127,8 @@ class EditForm extends Edit {
           basename={getItemBaseName(this.props.match.params.id)}
           handler={(err, { size, imageURL }) => {
             if (err) {
-              console.warn('Upload error', err);
               return this.setState({
-                error: err.toString(),
+                snackMsg: 'ERROR:' + err.toString(),
               });
             }
 
@@ -137,6 +154,7 @@ class EditForm extends Edit {
           />
           <Actions onDelete={this.deleteItem} onUpdate={this.updateItem} />
         </form>
+        <SnackWrap msg={this.state.snackMsg} />
       </div>
     );
   }

@@ -3,7 +3,6 @@ import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import Snackbar from 'material-ui/Snackbar';
 // import Slide from 'material-ui/transitions/Slide';
 import { connect } from 'react-redux';
 
@@ -11,6 +10,7 @@ import AvatarPicker from '../components/AvatarPicker';
 import { auth } from '../config/firebase';
 import { getItemBaseName } from '../helpers';
 import styles from '../services/styles';
+import SnackWrap from '../components/SnackWrap';
 
 class AccountForm extends Component {
   constructor(props) {
@@ -30,12 +30,12 @@ class AccountForm extends Component {
 
   saved = msg => {
     this.setState({
-      saved: msg,
+      snackMsg: msg,
     });
 
     setTimeout(() => {
       this.setState({
-        saved: false,
+        snackMsg: false,
       });
     }, 3000);
   };
@@ -67,27 +67,6 @@ class AccountForm extends Component {
         this.saved('Error occured while updating image!');
       });
     this.setState({ ...this.state, ...updates });
-  };
-
-  getSnackBar = msg => {
-    if (!msg) {
-      return null;
-    }
-
-    return (
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        open={true}
-        autoHideDuration={3000}
-        SnackbarContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        message={<span id="message-id">{msg}</span>}
-      />
-    );
   };
 
   render() {
@@ -147,7 +126,7 @@ class AccountForm extends Component {
             </Button>
           </div>
         </form>
-        {this.getSnackBar(this.state.saved)}
+        <SnackWrap msg={this.state.snackMsg} />
       </div>
     );
   }
