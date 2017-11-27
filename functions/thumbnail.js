@@ -5,11 +5,9 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 
-const bucketOb = functions.storage
-  .bucket('react-firebase-template.appspot.com')
-  .object();
+const orientImage = require('./helpers/exif').orientImage;
 
-exports.generateThumbnail = bucketOb.onChange(event => {
+exports.handler = event => {
   const object = event.data; // The Storage object.
 
   const fileBucket = object.bucket; // The Storage bucket that contains the file.
@@ -20,29 +18,29 @@ exports.generateThumbnail = bucketOb.onChange(event => {
 
   // Exit if this is triggered on a file that is not an image.
   if (!contentType.startsWith('image/')) {
-    console.log('This is not an image.');
-    return;
+    // console.log('This is not an image.');
+    return false;
   }
 
   // Get the file name.
   const fileName = path.basename(filePath);
   // Exit if the image is already a thumbnail.
   if (fileName.startsWith('thumb_')) {
-    console.log('Already a Thumbnail.');
-    return;
+    // console.log('Already a Thumbnail.');
+    return false;
   }
 
   // Exit if this is a move or deletion event.
   if (resourceState === 'not_exists') {
-    console.log('This is a deletion event.');
-    return;
+    // console.log('This is a deletion event.');
+    return false;
   }
 
   // Exit if file exists but is not new and is only being triggered
   // because of a metadata change.
   if (resourceState === 'exists' && metageneration > 1) {
-    console.log('This is a metadata change event.');
-    return;
+    // console.log('This is a metadata change event.');
+    return false;
   }
 
   const bucket = gcs.bucket(fileBucket);
@@ -55,7 +53,7 @@ exports.generateThumbnail = bucketOb.onChange(event => {
       destination: tempFilePath,
     })
     .then(() => {
-      console.log('Image downloaded locally to', tempFilePath);
+      // console.log('Image downloaded locally to', tempFilePath);
       // Generate a thumbnail using ImageMagick.
       return spawn('convert', [
         tempFilePath,
@@ -65,9 +63,7 @@ exports.generateThumbnail = bucketOb.onChange(event => {
       ]);
     })
     .then(() => {
-      console.log('Rotating Image');
-      // Rotate the image
-      return spawn('convert', [tempFilePath, '-rotate', '90', tempFilePath]);
+      return orientImage(tempFilePath);
     })
     .then(() => {
       console.log('Thumbnail created at', tempFilePath);
@@ -75,11 +71,11 @@ exports.generateThumbnail = bucketOb.onChange(event => {
       const thumbFileName = `thumb_${fileName}`;
       const thumbFilePath = path.join(path.dirname(filePath), thumbFileName);
       // Uploading the thumbnail.
-      return bucket.upload(tempFilePath, {
+      return bucket.upload(filePath, {
         destination: thumbFilePath,
         metadata: metadata,
       });
       // Once the thumbnail has been uploaded delete the local file to free up disk space.
     })
     .then(() => fs.unlinkSync(tempFilePath));
-});
+};
