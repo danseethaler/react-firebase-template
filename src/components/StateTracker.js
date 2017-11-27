@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+// import { addSeedData } from './../services/data';
 import firebase, { auth } from '../config/firebase';
 import { onAuthStateChanged } from '../actions/user';
 import {
@@ -9,22 +10,6 @@ import {
   updateItem,
   removeItem,
 } from '../actions/items';
-
-function addSeedData() {
-  fetch('https://randomuser.me/api/')
-    .then(data => data.json())
-    .then(data => {
-      const user = data.results.shift();
-
-      firebase
-        .database()
-        .ref('items')
-        .push({
-          displayName: user.name.first + ' ' + user.name.last,
-          imageURL: user.picture.large,
-        });
-    });
-}
 
 class StateTracker extends Component {
   componentDidMount() {
@@ -37,7 +22,7 @@ class StateTracker extends Component {
       } else {
         // User is logged in
         this.itemsRef.on('child_added', this.addItem);
-        addSeedData();
+        // addSeedData();
         this.itemsRef.on('child_changed', this.updateItem);
 
         this.itemsRef.on('child_removed', data => {

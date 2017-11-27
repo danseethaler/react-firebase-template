@@ -7,7 +7,9 @@ import Snackbar from 'material-ui/Snackbar';
 // import Slide from 'material-ui/transitions/Slide';
 import { connect } from 'react-redux';
 
+import AvatarPicker from '../components/AvatarPicker';
 import { auth } from '../config/firebase';
+import { getItemBaseName } from '../helpers';
 import styles from '../services/styles';
 
 class AccountForm extends Component {
@@ -54,6 +56,19 @@ class AccountForm extends Component {
       });
   };
 
+  manualUpdate = updates => {
+    auth()
+      .currentUser.updateProfile(updates)
+      .then(() => {
+        this.saved('Image updated.');
+      })
+      .catch(error => {
+        console.warn(error);
+        this.saved('Error occured while updating image!');
+      });
+    this.setState({ ...this.state, ...updates });
+  };
+
   getSnackBar = msg => {
     if (!msg) {
       return null;
@@ -76,13 +91,33 @@ class AccountForm extends Component {
   };
 
   render() {
-    const { user: { displayName }, classes } = this.props;
+    const { user: { displayName, photoURL, uid }, classes } = this.props;
 
     return (
       <div className={classes.container}>
         <Typography type="display1" gutterBottom>
           {displayName}
         </Typography>
+        <AvatarPicker
+          imageURL={photoURL}
+          altText={displayName}
+          id="account-edit"
+          basename={getItemBaseName(uid)}
+          handler={(err, { size, imageURL }) => {
+            if (err) {
+              console.warn('Upload error', err);
+              return this.setState({
+                error: err.toString(),
+              });
+            }
+
+            if (size === 'thumb') {
+              this.manualUpdate({
+                photoURL: imageURL,
+              });
+            }
+          }}
+        />
         <form onSubmit={this.save}>
           <div>
             <TextField
@@ -99,14 +134,6 @@ class AccountForm extends Component {
               className={classes.textField}
               margin="normal"
               value={this.state.email}
-              onChange={this.updateTextInput}
-            />
-            <TextField
-              label="Photo URL"
-              name="photoURL"
-              className={classes.textField}
-              margin="normal"
-              value={this.state.photoURL}
               onChange={this.updateTextInput}
             />
             <Button

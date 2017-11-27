@@ -7,7 +7,7 @@ const styles = theme => ({
   big: {
     width: 100,
     height: 100,
-    margin: 20,
+    margin: 10,
   },
   normal: {
     width: 40,
@@ -22,7 +22,7 @@ const StyledAvatar = ({ text, imageURL, big, classes }) => {
   if (imageURL) {
     return <Avatar className={classes[className]} alt={text} src={imageURL} />;
   }
-  return <Avatar className={classes[className]}>{text[0]}</Avatar>;
+  return <Avatar className={classes[className]}>{text ? text[0] : '?'}</Avatar>;
 };
 
 export default withStyles(styles)(StyledAvatar);

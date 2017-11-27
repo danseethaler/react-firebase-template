@@ -5,133 +5,9 @@ import Typography from 'material-ui/Typography';
 
 import firebase from '../config/firebase';
 import Actions from '../components/Actions';
+import { getItemBaseName } from '../helpers';
 import styles from '../services/styles';
-import Avatar from '../components/Avatar';
-import { storageRef } from '../config/firebase';
-
-class EditForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      displayName: props.item.displayName || '',
-      imageURL: props.item.imageURL || '',
-      error: null,
-    };
-  }
-
-  updateTextInput = e => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  updateItem = e => {
-    e.preventDefault();
-
-    this.props.fbRef.set({
-      displayName: this.state.displayName,
-      imageURL: this.state.imageURL,
-    });
-  };
-
-  manualUpdate = updates => {
-    this.props.fbRef.set({
-      ...{
-        displayName: this.state.displayName,
-        imageURL: this.state.imageURL,
-      },
-      ...updates,
-    });
-    this.setState({ ...this.state, ...updates });
-  };
-
-  deleteItem = () => {
-    this.props.fbRef.remove();
-    this.props.history.push('/items');
-  };
-
-  validFile = file => {
-    const extIndex = file.name.lastIndexOf('.') + 1;
-
-    if (!extIndex) {
-      return false;
-    }
-
-    var ext = file.name.substr(extIndex).toLowerCase();
-    return ['png', 'jpeg', 'jpg'].includes(ext);
-  };
-
-  getUserIconName = ({ name }) => {
-    const fileName = `${this.props.id}_${name.trim().toLowerCase()}`;
-    return fileName;
-  };
-
-  handleFiles = e => {
-    const { files } = e.target;
-    const file = files[0];
-
-    if (!this.validFile(file)) {
-      return this.setState({
-        error: 'Invalid file type.',
-      });
-    }
-
-    const fileName = this.getUserIconName(file);
-    var imagesRef = storageRef.child(`images/${fileName}`);
-
-    imagesRef
-      .put(file)
-      .then(({ downloadURL: imageURL }) => {
-        this.manualUpdate({
-          imageURL,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          error: 'Invalid file type.',
-        });
-      });
-  };
-
-  render() {
-    const { classes, item: { displayName } } = this.props;
-    const { imageURL } = this.state;
-
-    return (
-      <div className={classes.container}>
-        <Typography type="display1" gutterBottom>
-          {displayName}
-        </Typography>
-
-        <Avatar text={displayName} imageURL={imageURL} big />
-
-        <input type="file" id="input" onChange={this.handleFiles} />
-
-        <form onSubmit={this.updateItem}>
-          <div>
-            <TextField
-              label="Title"
-              name="displayName"
-              className={classes.textField}
-              margin="normal"
-              value={this.state.displayName}
-              onChange={this.updateTextInput}
-            />
-            <TextField
-              label="Image URL"
-              name="imageURL"
-              className={classes.textField}
-              margin="normal"
-              value={this.state.imageURL}
-              onChange={this.updateTextInput}
-            />
-            <Actions onDelete={this.deleteItem} onUpdate={this.updateItem} />
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
+import AvatarPicker from '../components/AvatarPicker';
 
 class Edit extends Component {
   constructor(props) {
@@ -155,7 +31,7 @@ class Edit extends Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        console.warn(err);
       });
   }
 
@@ -175,6 +51,94 @@ class Edit extends Component {
       );
     }
     return null;
+  }
+}
+
+class EditForm extends Edit {
+  constructor(props) {
+    super(props);
+    this.state = {
+      displayName: props.item.displayName || '',
+      imageURL: props.item.imageURL || '',
+      error: null,
+    };
+  }
+
+  updateTextInput = e => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  updateItem = e => {
+    e.preventDefault();
+
+    this.fbRef.set({
+      displayName: this.state.displayName.trim(),
+      imageURL: this.state.imageURL.trim(),
+    });
+  };
+
+  manualUpdate = updates => {
+    this.fbRef.set({
+      ...this.state,
+      ...updates,
+    });
+    this.setState({ ...this.state, ...updates });
+  };
+
+  deleteItem = () => {
+    this.fbRef.remove();
+    this.props.history.push('/items');
+  };
+
+  render() {
+    const { classes, item: { displayName } } = this.props;
+    const { imageURL } = this.state;
+
+    return (
+      <div className={classes.container}>
+        <Typography type="display1" gutterBottom>
+          {displayName}
+        </Typography>
+
+        <AvatarPicker
+          imageURL={imageURL}
+          altText={displayName}
+          id="edit-item"
+          basename={getItemBaseName(this.props.match.params.id)}
+          handler={(err, { size, imageURL }) => {
+            if (err) {
+              console.warn('Upload error', err);
+              return this.setState({
+                error: err.toString(),
+              });
+            }
+
+            const imageKey = size === 'thumb' ? 'imageURL' : 'imageFullURL';
+
+            this.manualUpdate({
+              [imageKey]: imageURL,
+            });
+          }}
+        />
+
+        <form
+          onSubmit={this.updateItem}
+          style={{ width: 'calc(100% - 20px)', maxWidth: 400 }}
+        >
+          <TextField
+            label="Title"
+            name="displayName"
+            className={classes.textField}
+            margin="normal"
+            value={this.state.displayName}
+            onChange={this.updateTextInput}
+          />
+          <Actions onDelete={this.deleteItem} onUpdate={this.updateItem} />
+        </form>
+      </div>
+    );
   }
 }
 
